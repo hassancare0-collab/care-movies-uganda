@@ -1,0 +1,569 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Care Movies - Payment</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
+        }
+
+        header {
+            background: #000;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #333;
+        }
+
+        .logo {
+            color: #e50914;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 35px;
+        }
+
+        .plans {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .plan {
+            background: #1d1d1d;
+            border: 2px solid #333;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .plan:hover {
+            border-color: #e50914;
+            transform: translateY(-3px);
+        }
+
+        .plan.selected {
+            border-color: #e50914;
+            background: #241010;
+        }
+
+        .plan h2 {
+            margin-top: 0;
+        }
+
+        .price {
+            color: #e50914;
+            font-size: 28px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .duration {
+            color: #aaa;
+        }
+
+        .payment-box {
+            margin-top: 35px;
+            background: #1d1d1d;
+            padding: 30px;
+            border-radius: 12px;
+        }
+
+        .payment-box h2 {
+            margin-top: 0;
+        }
+
+        .methods {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .method {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #333;
+            background: #111;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .method.selected {
+            border-color: #e50914;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .pay-button {
+            width: 100%;
+            padding: 15px;
+            background: #e50914;
+            border: none;
+            border-radius: 7px;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .pay-button:hover {
+            background: #b20710;
+        }
+
+        .pay-button:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+
+        .info {
+            margin-top: 25px;
+            padding: 20px;
+            background: #111;
+            border-radius: 8px;
+            color: #aaa;
+            line-height: 1.6;
+        }
+
+        #message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+            line-height: 1.6;
+        }
+
+        footer {
+            text-align: center;
+            color: #777;
+            padding: 30px;
+        }
+
+        @media (max-width: 700px) {
+            .plans {
+                grid-template-columns: 1fr;
+            }
+
+            .methods {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">
+        CARE MOVIES
+    </div>
+</header>
+
+<div class="container">
+
+    <h1>Choose Your Subscription</h1>
+
+    <p class="subtitle">
+        Choose a plan to access Care Movies.
+    </p>
+
+    <div class="plans">
+
+        <div class="plan" onclick="selectPlan('Daily', 1000, this)">
+            <h2>Daily</h2>
+
+            <div class="price">
+                UGX 1,000
+            </div>
+
+            <div class="duration">
+                Access for 24 hours
+            </div>
+        </div>
+
+        <div class="plan" onclick="selectPlan('Weekly', 1500, this)">
+            <h2>Weekly</h2>
+
+            <div class="price">
+                UGX 1,500
+            </div>
+
+            <div class="duration">
+                Access for 7 days
+            </div>
+        </div>
+
+        <div class="plan" onclick="selectPlan('Monthly', 5000, this)">
+            <h2>Monthly</h2>
+
+            <div class="price">
+                UGX 5,000
+            </div>
+
+            <div class="duration">
+                Access for 30 days
+            </div>
+        </div>
+
+    </div>
+
+    <div class="payment-box">
+
+        <h2>Payment Method</h2>
+
+        <div class="methods">
+
+            <button
+                class="method"
+                id="mtnButton"
+                onclick="selectMethod('MTN')">
+                🟡 MTN Mobile Money
+            </button>
+
+            <button
+                class="method"
+                id="airtelButton"
+                onclick="selectMethod('Airtel')">
+                🔴 Airtel Money
+            </button>
+
+        </div>
+
+        <label>
+            Customer Mobile Money Number
+        </label>
+
+        <input
+            type="tel"
+            id="customerNumber"
+            placeholder="Enter your MTN/Airtel number">
+
+        <div class="info">
+
+            <strong>Payment destination for testing:</strong>
+
+            <br>
+
+            0748348973
+
+            <br><br>
+
+            Select a subscription and payment method,
+            then enter the customer's number.
+
+        </div>
+
+        <br>
+
+        <button
+            class="pay-button"
+            id="payButton"
+            onclick="startPayment()">
+            Continue Payment
+        </button>
+
+        <div id="message"></div>
+
+    </div>
+
+</div>
+
+<footer>
+    © 2026 Care Movies
+</footer>
+
+<script>
+
+let selectedPlan = null;
+let selectedAmount = 0;
+let selectedMethod = null;
+
+
+function selectPlan(plan, amount, element) {
+
+    selectedPlan = plan;
+    selectedAmount = amount;
+
+    document
+        .querySelectorAll(".plan")
+        .forEach(function(item) {
+            item.classList.remove("selected");
+        });
+
+    element.classList.add("selected");
+
+    document.getElementById("message").style.display = "none";
+}
+
+
+function selectMethod(method) {
+
+    selectedMethod = method;
+
+    document
+        .querySelectorAll(".method")
+        .forEach(function(button) {
+            button.classList.remove("selected");
+        });
+
+    if (method === "MTN") {
+        document
+            .getElementById("mtnButton")
+            .classList.add("selected");
+    }
+
+    if (method === "Airtel") {
+        document
+            .getElementById("airtelButton")
+            .classList.add("selected");
+    }
+
+    document.getElementById("message").style.display = "none";
+}
+
+
+async function startPayment() {
+
+    const customerNumber =
+        document
+            .getElementById("customerNumber")
+            .value
+            .trim();
+
+    const message =
+        document.getElementById("message");
+
+    const payButton =
+        document.getElementById("payButton");
+
+
+    if (!selectedPlan) {
+
+        showMessage(
+            "Please select a subscription plan.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if (!selectedMethod) {
+
+        showMessage(
+            "Please select MTN or Airtel Money.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if (!customerNumber) {
+
+        showMessage(
+            "Please enter your mobile money number.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    message.style.display = "block";
+    message.style.background = "#332900";
+    message.style.color = "#ffd966";
+
+    message.textContent =
+        "Sending payment request...";
+
+    payButton.disabled = true;
+    payButton.textContent = "Processing...";
+
+
+    try {
+
+        const response = await fetch(
+            "http://127.0.0.1:8090/api/payment",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    plan: selectedPlan,
+
+                    amount: selectedAmount,
+
+                    method: selectedMethod,
+
+                    customerNumber: customerNumber
+
+                })
+            }
+        );
+
+
+        const data = await response.json();
+
+
+        if (!response.ok || !data.success) {
+
+            throw new Error(
+                data.message ||
+                "Payment request failed."
+            );
+        }
+
+
+        message.style.display = "block";
+        message.style.background = "#123b1d";
+        message.style.color = "#8cff9b";
+
+
+        message.innerHTML = `
+
+            <strong>
+                Payment request created successfully.
+            </strong>
+
+            <br><br>
+
+            Plan:
+            <strong>${data.payment.plan}</strong>
+
+            <br>
+
+            Amount:
+            <strong>
+                UGX ${Number(
+                    data.payment.amount
+                ).toLocaleString()}
+            </strong>
+
+            <br>
+
+            Method:
+            <strong>${data.payment.method}</strong>
+
+            <br>
+
+            Customer:
+            <strong>${data.payment.customerNumber}</strong>
+
+            <br>
+
+            Payment ID:
+            <strong>${data.payment.id}</strong>
+
+            <br>
+
+            Status:
+            <strong>${data.payment.status}</strong>
+
+            <br><br>
+
+            Your payment request has been recorded.
+
+            <br><br>
+
+            Real Mobile Money charging will be
+            connected to the MTN/Airtel payment
+            API next.
+
+        `;
+
+
+    } catch (error) {
+
+        message.style.display = "block";
+        message.style.background = "#3a1111";
+        message.style.color = "#ff9999";
+
+        message.textContent =
+            "Could not connect to payment server: " +
+            error.message;
+
+    } finally {
+
+        payButton.disabled = false;
+
+        payButton.textContent =
+            "Continue Payment";
+
+    }
+}
+
+
+function showMessage(text, type) {
+
+    const message =
+        document.getElementById("message");
+
+    message.style.display = "block";
+
+    if (type === "error") {
+
+        message.style.background = "#3a1111";
+        message.style.color = "#ff9999";
+
+    } else {
+
+        message.style.background = "#123b1d";
+        message.style.color = "#8cff9b";
+
+    }
+
+    message.textContent = text;
+}
+
+</script>
+
+</body>
+</html>
+```
