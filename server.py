@@ -624,8 +624,8 @@ class CareMoviesHandler(SimpleHTTPRequestHandler):
         # -----------------------------------------------
         # MOVIES API
         # -----------------------------------------------
-
-        if self.path == "/api/movies":
+if urlparse(self.path).path == "/api/movies":
+        
 
             movies = read_json(
                 MOVIES_FILE,
